@@ -2,6 +2,7 @@
 Homegrown LLM to learn how these work.
 
 [![pllm](https://github.com/thomi137/pllm/actions/workflows/rust.yml/badge.svg)](https://github.com/thomi137/pllm/actions/workflows/rust.yml)
+[![Rust 1.90.0+](https://img.shields.io/badge/rust-1.87.0+-orange.svg)](https://www.rust-lang.org)
 
 
 ## Purpose
