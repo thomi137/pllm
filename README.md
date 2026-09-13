@@ -1,6 +1,9 @@
 # pllm
 Homegrown LLM to learn how these work.
 
+[![pllm](https://github.com/thomi137/pllm/actions/workflows/rust.yml/badge.svg)](https://github.com/thomi137/pllm/actions/workflows/rust.yml)
+
+
 ## Purpose
 This repo illustrates the basic buildup of a LLM. It is currently a work in progress and intended for learning purposes, not for production use (if anybody has access to a large enough machine, feel free to oblige 😀)
 
