@@ -29,4 +29,4 @@ Feel free to use your own. But you'll see that even your superfast gaming engine
 
 ## References
 <a id=1>[1]</a>
-[Sennrich, Haddow & Birch (2016) — "Neural Machine Translation of Rare Words with Subword Units"](arxiv.org/abs/1508.07909 )
+[Sennrich, Haddow & Birch (2016) — "Neural Machine Translation of Rare Words with Subword Units"](arxiv.org/abs/1508.07909)
