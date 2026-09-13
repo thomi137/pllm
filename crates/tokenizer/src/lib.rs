@@ -131,6 +131,64 @@ impl Bpe {
         String::from_utf8_lossy(&bytes).into_owned()
     }
 
+    /// One token, rendered for human eyes.
+    ///
+    /// Whitespace is made visible, because where the spaces ended up is the
+    /// point of looking at a merge table at all. A token can also stop
+    /// mid-UTF-8 — the first byte of "ü" is a legal token — so an invalid
+    /// sequence is shown as its raw bytes rather than as the replacement
+    /// character `decode()` would produce, which hides which byte it was.
+    pub fn token_repr(&self, id: u32) -> String {
+        let Some(bytes) = self.vocab.get(&id) else {
+            return format!("<unknown {id}>");
+        };
+        match std::str::from_utf8(bytes) {
+            Ok(s) => s.replace(' ', "␣").replace('\n', "⏎").replace('\t', "⇥"),
+            Err(_) => bytes.iter().map(|b| format!("<{b:02X}>")).collect(),
+        }
+    }
+
+    /// The learned merges in rank order, one line each:
+    ///
+    /// ```text
+    ///     0     256  "e" + "r" -> "er"
+    ///     1     257  "␣d" + "er" -> "␣der"
+    /// ```
+    ///
+    /// Reading this top to bottom is reading the corpus statistics: letter
+    /// pairs first, then syllables, then whole frequent words with their
+    /// leading space. This is the human counterpart to `to_string_repr`,
+    /// which writes ids only so that it can be read back exactly.
+    pub fn merge_table(&self) -> String {
+        let mut out = String::new();
+        for (rank, &(a, b)) in self.merges.iter().enumerate() {
+            let new_id = 256 + rank as u32;
+            out.push_str(&format!(
+                "{rank:>5}  {new_id:>6}  {:?} + {:?} -> {:?}\n",
+                self.token_repr(a),
+                self.token_repr(b),
+                self.token_repr(new_id)
+            ));
+        }
+        out
+    }
+
+    /// The `n` longest learned tokens, longest first. Raw bytes are skipped.
+    ///
+    /// Length is the interesting axis: the longest tokens are whatever the
+    /// corpus repeats most, which is where German compounds show up.
+    pub fn longest_tokens(&self, n: usize) -> Vec<(u32, String)> {
+        let mut learned: Vec<u32> = self.vocab.keys().copied().filter(|&id| id >= 256).collect();
+        // Length first, then id — equal-length tokens keep a stable order
+        // instead of inheriting the HashMap's random one.
+        learned.sort_by_key(|&id| (Reverse(self.vocab[&id].len()), id));
+        learned
+            .into_iter()
+            .take(n)
+            .map(|id| (id, self.token_repr(id)))
+            .collect()
+    }
+
     /// Serialises only the merges — the rest is reconstructible from them.
     pub fn to_string_repr(&self) -> String {
         let mut s = String::from("pllm bpe v1\n");
@@ -337,6 +395,46 @@ mod tests {
         a.train(&corpus, 30, false);
         b.train(&corpus, 30, false);
         assert_eq!(a.to_string_repr(), b.to_string_repr());
+    }
+
+    #[test]
+    fn token_repr_makes_whitespace_visible() {
+        let mut bpe = Bpe::new();
+        bpe.train(&"der Hund der Hund der Hund ".repeat(50), 40, false);
+
+        assert_eq!(bpe.token_repr(b' ' as u32), "␣");
+        assert_eq!(bpe.token_repr(b'\n' as u32), "⏎");
+        // First byte of "ü" — valid token, invalid UTF-8 on its own.
+        assert_eq!(bpe.token_repr(0xC3), "<C3>");
+        assert_eq!(bpe.token_repr(9_999), "<unknown 9999>");
+    }
+
+    #[test]
+    fn merge_table_is_readable() {
+        let corpus = "der Hund der Hund der Hund ".repeat(50);
+        let mut bpe = Bpe::new();
+        bpe.train(&corpus, 40, false);
+
+        let table = bpe.merge_table();
+        // One line per learned merge, ranks in order starting at 0.
+        assert_eq!(table.lines().count(), bpe.vocab_size() - 256);
+        assert!(table.lines().next().unwrap().starts_with("    0     256"));
+        // The whole word must be in there, with its leading space marked.
+        assert!(table.contains("\"␣Hund\""), "{table}");
+    }
+
+    #[test]
+    fn longest_tokens_are_sorted_long_first() {
+        let corpus = "Donaudampfschifffahrt Donaudampfschifffahrt ab ".repeat(50);
+        let mut bpe = Bpe::new();
+        bpe.train(&corpus, 60, false);
+
+        let top = bpe.longest_tokens(5);
+        assert_eq!(top.len(), 5);
+        for pair in top.windows(2) {
+            assert!(pair[0].1.chars().count() >= pair[1].1.chars().count(), "{top:?}");
+        }
+        assert!(top[0].1.contains("Donaudampfschifffahrt"), "{top:?}");
     }
 
     #[test]

@@ -8,8 +8,9 @@
 Milestones are sequential. Each is independently runnable and independently
 instructive. Do not start the next before the previous passes its tests.
 
-State on 2026-09-13: the M1 core is in place, tests green (`cargo test`, 3
-tests). What remains in M1 is the regex pre-split.
+State on 2026-09-13: **M1 done** — all DoD boxes ticked, `cargo test` 10
+passed. Measured on 11 MB of German news, 500 merges: 2.35 bytes/token.
+Next up is M2.
 
 ---
 
@@ -27,7 +28,8 @@ measurably, and persists its merge table.
 - [x] Merge table serialises and reloads stably
 - [x] Regex-style pre-split: `train` and `encode` work chunk by chunk
       ([history/m1-5-pre-split.md](history/m1-5-pre-split.md))
-- [ ] Vocabulary inspection: the learned merges can be printed readably
+- [x] Vocabulary inspection: the learned merges can be printed readably
+      ([history/m1-vocab-inspection.md](history/m1-vocab-inspection.md))
 
 ### Current state
 

@@ -15,8 +15,12 @@ The tokenizer is basically a BPE Algorithm which chunks bytes for better perform
 
 For information on BPE, see [[1]](#1)
 
+### Corpora
+I used a file from the [Leipzig Corpora Portal](https://downloads.wortschatz-leipzig.de/corpora/deu_news_2025_100K.tar.gz). I did not check it in since I do not want to blow up the repo.
 
 
+
+Feel free to use your own. But you'll see that even your superfast gaming engine is on its knees very fast 😅.
 
 
 ## References

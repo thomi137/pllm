@@ -54,9 +54,15 @@ pub fn main() -> ExitCode {
     println!("\nDemo: {demo}");
     print!("  ");
     for id in bpe.encode(demo) {
-        print!("[{}]", bpe.decode(&[id]).replace(' ', "␣"));
+        print!("[{}]", bpe.token_repr(id));
     }
     println!("\n  {} Tokens for {} Bytes", bpe.encode(demo).len(), demo.len());
+
+    // The longest tokens say what the corpus repeats most.
+    println!("\nLongest tokens:");
+    for (id, text) in bpe.longest_tokens(15) {
+        println!("  {id:>6}  {text:?}");
+    }
 
     // Save
     if let Some(dir) = Path::new(out_path).parent() {
@@ -64,6 +70,11 @@ pub fn main() -> ExitCode {
     }
     fs::write(out_path, bpe.to_string_repr()).expect("schreiben");
     println!("\nGeschrieben: {out_path}");
+
+    // Same table, human side: ids only in the file above, text here.
+    let readable_path = format!("{out_path}.readable.txt");
+    fs::write(&readable_path, bpe.merge_table()).expect("schreiben");
+    println!("Geschrieben: {readable_path}");
 
     ExitCode::SUCCESS
 
