@@ -1,0 +1,34 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/tokenizer",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
+publish = false
+
+[workspace.dependencies]
+# --- Tensoren / Autograd (nur M3+) ---
+candle-core = "0.10"
+candle-nn = "0.10"
+
+# --- eigener Mini-Autograd (M2) ---
+ndarray = "0.16"
+
+# --- CLI ---
+clap = { version = "4.5", features = ["derive"] }
+indicatif = "0.17"
+anyhow = "1.0"
+
+pllm-tokenizer = { path = "crates/tokenizer" }
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

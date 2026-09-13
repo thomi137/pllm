@@ -1,5 +1,8 @@
+//! This is the tokenizer. I follows a BPE Algorithm
+//! See [Sennrich, Haddow & Birch (2016) — "Neural Machine Translation of Rare Words with Subword Units"](arxiv.org/abs/1508.07909 Sections 3, 4, 5 — Byte Pair Encoding (BPE))
 use std::collections::HashMap;
 
+/// This is the tokenizer struct.
 /// Byte-level byte pair encoding.
 ///
 /// IDs 0..=255 are the raw bytes. Every merge creates a new ID from 256 up.
@@ -38,7 +41,7 @@ impl Bpe {
 
         for i in 0..num_merges {
             let stats = count_pairs(&ids);
-            let Some((&pair, &count)) = stats.iter().max_by_key(|(_, &c)| c) else {
+            let Some((&pair, &count)) = stats.iter().max_by_key(|&(_, &c)| c) else {
                 break;
             };
             if count < 2 {
