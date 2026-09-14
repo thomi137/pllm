@@ -47,5 +47,6 @@ Feel free to use your own. But you'll see that even your superfast gaming engine
 ## References
 <a id=1>[1]</a>
 [Sennrich, Haddow & Birch (2016) — "Neural Machine Translation of Rare Words with Subword Units"](https://arxiv.org/abs/1508.07909)
+
 <a id=2>[2]</a>
 [Rumelhart, Hinton & Williams (1986) — "Learning Representations by Back-Propagating Errors"](https://nature.com/articles/323533a0)
