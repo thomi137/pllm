@@ -2,6 +2,7 @@
 resolver = "3"
 members = [
     "crates/tokenizer",
+    "crates/autograd",
 ]
 
 [workspace.package]
@@ -12,14 +13,9 @@ license = "MIT"
 publish = false
 
 [workspace.dependencies]
-# --- Tensoren / Autograd (nur M3+) ---
 candle-core = "0.10"
 candle-nn = "0.10"
-
-# --- eigener Mini-Autograd (M2) ---
 ndarray = "0.16"
-
-# --- CLI ---
 clap = { version = "4.5", features = ["derive"] }
 indicatif = "0.17"
 anyhow = "1.0"

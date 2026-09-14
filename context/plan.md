@@ -8,9 +8,9 @@
 Milestones are sequential. Each is independently runnable and independently
 instructive. Do not start the next before the previous passes its tests.
 
-State on 2026-09-13: **M1 done** — all DoD boxes ticked, `cargo test` 10
-passed. Measured on 11 MB of German news, 500 merges: 2.35 bytes/token.
-Next up is M2.
+State on 2026-09-14: **M1 and M2 done** — `cargo test` 19 passed across both
+crates. M1 on 11 MB of German news, 500 merges: 2.35 bytes/token. M2: XOR
+converges to f64 saturation, gradients verified numerically. Next up is M3.
 
 ---
 
@@ -116,10 +116,11 @@ M2 is not a dependency of M3–M6.
 
 ### Definition of done
 
-- [ ] `Value` type with `+`, `*`, `tanh`/`relu`, `pow`
-- [ ] Topological sort; `backward()` fills every gradient
-- [ ] Gradients match numerical differentiation within 1e-5
-- [ ] XOR network (2-4-1) converges to a loss near zero
+- [x] `Value` type with `+`, `*`, `tanh`/`relu`, `pow`
+- [x] Topological sort; `backward()` fills every gradient
+- [x] Gradients match numerical differentiation within 1e-5
+- [x] XOR network (2-4-1) converges to a loss near zero
+      ([history/m2-autograd.md](history/m2-autograd.md))
 
 ### Steps
 
