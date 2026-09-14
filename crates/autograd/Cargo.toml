@@ -1,0 +1,11 @@
+[package]
+name = "pllm-autograd"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+# ndarray is allowed here (intent.md §6) but unused: a scalar engine has
+# nothing to put in an array, and every value is visible without one.
+[dependencies]
