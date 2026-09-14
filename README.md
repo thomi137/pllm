@@ -33,7 +33,7 @@ given $`x`$ and $`y`$, predict $`x \oplus y`$. We chan easily check the correctn
 We chose this problem because it is the simplest one which is not linearly separatable (i.e. there is no mapping $`f(x, y) = w_1x + w_2x + b`$ which reproduces the truth table above). So we can use this 
 to predict the results using a multilayered neural network (a multilayered perceptron) to illustrate backpropagation [[2]](#2) and training of a neural network.
 
-It also documents common pitfalls like ignoring the chain rule from elementary calculus: $`\frac{d}{dx}[f(g(x))] = f'(g(x)) \cdot g'(x)`$ when summing up derivatives. For more pitfalls and how we prevented them, see the [implementation explsnation](.context/history/m2-autograd.md).
+It also documents common pitfalls like ignoring the chain rule from elementary calculus: $`\frac{d}{dx}[f(g(x))] = f'(g(x)) \cdot g'(x)`$ when summing up derivatives. For more pitfalls and how we prevented them, see the [implementation explsnation](context/history/m2-autograd.md).
 
 
 ### Corpora
@@ -48,4 +48,4 @@ Feel free to use your own. But you'll see that even your superfast gaming engine
 <a id=1>[1]</a>
 [Sennrich, Haddow & Birch (2016) — "Neural Machine Translation of Rare Words with Subword Units"](https://arxiv.org/abs/1508.07909)
 <a id=2>[2]</a>
-[2](https://nature.com/articles/323533a0)
+[Rumelhart, Hinton & Williams (1986) — "Learning Representations by Back-Propagating Errors"](https://nature.com/articles/323533a0)
