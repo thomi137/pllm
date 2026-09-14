@@ -19,6 +19,23 @@ The tokenizer is basically a BPE Algorithm which chunks bytes for better perform
 
 For information on BPE, see [[1]](#1)
 
+### Autograd
+This crate is merely for illustrational purposes to show how backpropagation on a simple neural network can be implemented it serves as a learning example and is not fit for production use. It solve a simple problem:
+given $`x`$ and $`y`$, predict $`x \oplus y`$. We chan easily check the correctnes of the neural network because we know the thruth table for XOR:
+
+ |$`x`$|$`y`$|$`x \oplus y`$|
+ |:---:|:---:|:---:|
+ |$`1`$|$`0`$|$`1`$|
+ |$`0`$|$`1`$|$`1`$|
+ |$`0`$|$`0`$|$`0`$|
+ |$`1`$|$`1`$|$`0`$|
+
+We chose this problem because it is the simplest one which is not linearly separatable (i.e. there is no mapping $`f(x, y) = w_1x + w_2x + b`$ which reproduces the truth table above). So we can use this 
+to predict the results using a multilayered neural network (a multilayered perceptron) to illustrate backpropagation [[2]](#2) and training of a neural network.
+
+It also documents common pitfalls like ignoring the chain rule from elementary calculus: $`\frac{d}{dx}[f(g(x))] = f'(g(x)) \cdot g'(x)`$ when summing up derivatives. For more pitfalls and how we prevented them, see the [implementation explsnation](.context/history/m2-autograd.md).
+
+
 ### Corpora
 I used a file from the [Leipzig Corpora Portal](https://downloads.wortschatz-leipzig.de/corpora/deu_news_2025_100K.tar.gz). I did not check it in since I do not want to blow up the repo.
 
@@ -30,3 +47,5 @@ Feel free to use your own. But you'll see that even your superfast gaming engine
 ## References
 <a id=1>[1]</a>
 [Sennrich, Haddow & Birch (2016) — "Neural Machine Translation of Rare Words with Subword Units"](https://arxiv.org/abs/1508.07909)
+<a id=2>[2]</a>
+[2](https://nature.com/articles/323533a0)
