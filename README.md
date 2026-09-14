@@ -35,6 +35,8 @@ to predict the results using a multilayered neural network (a multilayered perce
 
 It also documents common pitfalls like ignoring the chain rule from elementary calculus: $`\frac{d}{dx}[f(g(x))] = f'(g(x)) \cdot g'(x)`$ when summing up derivatives. For more pitfalls and how we prevented them, see the [implementation explsnation](context/history/m2-autograd.md).
 
+The seminal paper and a link to the original python library that implements automatic gradients (autograd) can be found here: [[3]](#3)
+
 
 ### Corpora
 I used a file from the [Leipzig Corpora Portal](https://downloads.wortschatz-leipzig.de/corpora/deu_news_2025_100K.tar.gz). I did not check it in since I do not want to blow up the repo.
@@ -50,3 +52,6 @@ Feel free to use your own. But you'll see that even your superfast gaming engine
 
 <a id=2>[2]</a>
 [Rumelhart, Hinton & Williams (1986) — "Learning Representations by Back-Propagating Errors"](https://nature.com/articles/323533a0)
+
+<a id=3>[3]</a>
+[Maclaurin, Duvenaud & Adams (2015) - "Autograd: Effortless Gradients in Numpy"](https://indico.ijclab.in2p3.fr/event/2914/contributions/6483/subcontributions/180/attachments/6060/7185/automl-short.pdf)
