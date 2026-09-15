@@ -37,7 +37,7 @@ For more pitfalls and how we prevented them, see the [implementation explanation
 
 The seminal paper and a link to the original python library that implements automatic gradients (autograd) can be found here: [[3]](#3)
 
-### Model
+### Model (Bigram Model)
 For training, we use a Bigram Model. As the [plan](context/plan.md) suggests, the dumbest model. however, we will build on this when reaching the transformer stabe. See [[4]](#4) for a brief intro and [[5]](#5) for a more formal treatment.
 
 ## Programming Language
