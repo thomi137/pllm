@@ -2,9 +2,10 @@
 // and a fixed-size tokenized corpus, for reuse by the `model` crate.
 //
 //   cargo run --release -p pllm-tokenizer --example encode_corpus -- \
-//       data/deu-ch_newscrawl_2012_1M-sentences.txt 1000000 500 out/corpus
+//       data/deu-ch_newscrawl_2012_1M-sentences.txt 500 1000000 out/corpus
 //
-// Arguments: <corpus> [num_tokens=1000000] [num_merges=500] [out_prefix=out/corpus]
+// Arguments: <corpus> [num_merges=500] [num_tokens=1000000] [out_prefix=out/corpus]
+// (same argument order as train_bpe.rs: corpus, merges, then the rest)
 //
 // Writes:
 //   <out_prefix>.bpe               merge table, reusable (Bpe::from_string_repr)
@@ -18,13 +19,13 @@ use std::process::ExitCode;
 pub fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 2 {
-        eprintln!("usage: encode_corpus <corpus.txt> [num_tokens] [num_merges] [out_prefix]");
+        eprintln!("usage: encode_corpus <corpus.txt> [num_merges] [num_tokens] [out_prefix]");
         return ExitCode::FAILURE;
     }
 
     let corpus_path = &args[1];
-    let num_tokens: usize = args.get(2).map_or(1_000_000, |s| s.parse().expect("num_tokens"));
-    let num_merges: u32 = args.get(3).map_or(500, |s| s.parse().expect("num_merges"));
+    let num_merges: u32 = args.get(2).map_or(500, |s| s.parse().expect("num_merges"));
+    let num_tokens: usize = args.get(3).map_or(1_000_000, |s| s.parse().expect("num_tokens"));
     let out_prefix = args.get(4).map_or("out/corpus", |s| s.as_str());
 
     let raw = match fs::read_to_string(corpus_path) {
