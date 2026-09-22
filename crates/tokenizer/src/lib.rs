@@ -246,6 +246,31 @@ fn char_at(text: &str, i: usize) -> Option<char> {
     text.get(i..).and_then(|s| s.chars().next())
 }
 
+/// Serialises token ids for reuse elsewhere (e.g. the `model` crate's
+/// training loop), without re-running `encode()` every time.
+///
+/// Format: an ASCII header line `"pllm ids v1\n"`, then every id as a raw
+/// little-endian `u16`. `u16` because a realistic vocab (a few hundred to a
+/// few thousand merges) fits easily, and it halves the file versus `u32`.
+/// Errors instead of silently truncating if a vocab ever grows past 65535.
+pub fn ids_to_bytes(ids: &[u32]) -> Result<Vec<u8>, String> {
+    let mut out = Vec::from(b"pllm ids v1\n".as_slice());
+    for &id in ids {
+        let id: u16 = id.try_into().map_err(|_| format!("id {id} does not fit in u16"))?;
+        out.extend_from_slice(&id.to_le_bytes());
+    }
+    Ok(out)
+}
+
+pub fn ids_from_bytes(bytes: &[u8]) -> Result<Vec<u32>, String> {
+    let header = b"pllm ids v1\n";
+    let body = bytes.strip_prefix(header.as_slice()).ok_or("unbekannter Header")?;
+    if body.len() % 2 != 0 {
+        return Err(format!("{} ist keine gerade Anzahl Bytes", body.len()));
+    }
+    Ok(body.chunks_exact(2).map(|c| u16::from_le_bytes([c[0], c[1]]) as u32).collect())
+}
+
 pub fn split_chunks(text: &str) -> Vec<&str> {
     let mut chunks = Vec::new();
     let mut i = 0; // Byte-Index
@@ -444,5 +469,22 @@ mod tests {
         a.train(&corpus, 20, false);
         let b = Bpe::from_string_repr(&a.to_string_repr()).unwrap();
         assert_eq!(a.encode("abcabc"), b.encode("abcabc"));
+    }
+
+    #[test]
+    fn ids_roundtrip() {
+        let ids = vec![0, 255, 256, 65535];
+        let bytes = ids_to_bytes(&ids).unwrap();
+        assert_eq!(ids_from_bytes(&bytes).unwrap(), ids);
+    }
+
+    #[test]
+    fn ids_reject_out_of_range() {
+        assert!(ids_to_bytes(&[65536]).is_err());
+    }
+
+    #[test]
+    fn ids_reject_unknown_header() {
+        assert!(ids_from_bytes(b"not the right header\n").is_err());
     }
 }

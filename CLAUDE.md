@@ -10,7 +10,7 @@ This repo separates four layers. Respect the boundaries — put changes in the r
 |------|-------|--------|
 | [context/intent.md](context/intent.md) | The *why* and *what*: purpose, success criteria, non-goals, milestones, constraints | Exists — **source of truth for scope** |
 | `context/design.md` | The *how*: design decisions and their rationale | Referenced by intent.md, not yet written |
-| `context/tasks.md` | The ordered work queue | Referenced by intent.md, not yet written |
+| [context/plan.md](context/plan.md) | The ordered work queue, milestone by milestone | Exists — M1 (tokenizer) and M2 (autograd) done |
 | `CLAUDE.md` (this file) | Agent operating rules | — |
 
 **Read [context/intent.md](context/intent.md) in full before proposing work, adding a dependency, or starting a milestone.** If code and intent.md disagree, intent.md wins — or intent.md gets updated first, deliberately. The rules below are the subset that must apply on every turn without re-reading it.
@@ -59,19 +59,21 @@ The choice to switch to `candle` rather than continue the hand-written autograd 
 
 ## Commands
 
-The workspace does not exist yet — no `Cargo.toml` has been committed. Once it does:
-
 ```sh
 cargo build
 cargo test                      # workspace-wide
-cargo test -p tokenizer         # one crate
+cargo test -p pllm-tokenizer    # one crate (package names are pllm-*, not the directory name)
+cargo test -p pllm-autograd
 cargo test <substring>          # one test by name
 cargo clippy
 cargo fmt
-cargo mutants                   # .gitignore anticipates mutation testing
+cargo mutants                   # .gitignore anticipates mutation testing; not yet wired into CI
 ```
 
-CI is scoped to `cargo test` and `cargo clippy` only (intent.md §3).
+Intent.md §3 scopes CI to `cargo test` and `cargo clippy`, but the current
+[.github/workflows/rust.yml](.github/workflows/rust.yml) only runs `build` and
+`test` — clippy isn't wired in yet. Treat intent.md as the target, not the
+current CI file, until someone updates one or the other.
 
 ## Open questions
 
